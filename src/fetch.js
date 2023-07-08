@@ -10,7 +10,10 @@ export default class FetchCat {
             // const arrCats = []
             return axios.get(url, {
             })
-                    .then(res => res.data)
+                    .then(res => {
+                            console.log(typeof(res.data));
+                            return res.data
+                    })
                 // .then(data => {
                 //     data.forEach(el => {
                 //         // arrCats.push(`{${el.id}, ${el.name}}`)
