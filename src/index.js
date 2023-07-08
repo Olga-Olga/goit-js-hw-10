@@ -31,7 +31,10 @@ catArr.fetchCats(allCatsURL)
 dropDownEl.addEventListener("change", handleDataCat)
 function handleDataCat(event) {
     console.dir(event.target.value)
-    catArr.fetchCatByBreed(event.target.value).then(el => {        
+    catArr.fetchCatByBreed(event.target.value).then(el => {   
+        console.log(el[0].breeds[0]);
+
+
         const id = event.target.value
         const nameCat = el[0].breeds[0].name
         const picture = el[0].url
@@ -40,12 +43,12 @@ function handleDataCat(event) {
         const temperament = el[0].breeds[0].temperament
 
         const mimimi = 
- `<img src="${picture}" alt="${id}" />
+ `<img src="${picture}" alt="${id}" width="250px" height="150px">
       <div>
         <h2>${nameCat}</h2>
         <p>${description}</p>
-        <h1>Temperament: ${temperament}</h1>
-        <h1>${wiki}</h1>
+        <h3>Temperament: ${temperament}</h3>
+        <a href="${wiki}">${wiki}</a>
 </div>`  
         console.log(mimimi);
 
