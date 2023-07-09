@@ -10,49 +10,62 @@ import { FetchCat } from "./cat-api";
 // console.log(template());
 // import markup from './templates/markupCat.hbs';
 import Notiflix from 'notiflix';
-const liba = ""
+Notiflix.Notify.success('Loading data, please wait...');
+
+
 const dropDownEl = document.querySelector(".breed-select")
 
-const loaderEl = document.querySelector(".loader")
+const loaderEl = document.querySelector(".willbeloading")
 const errorEl = document.querySelector(".error")
 const cardCatEl = document.querySelector(".cat-info");
+cardCatEl.classList.add("is-hidden")
+errorEl.classList.add("is-hidden");
 
 const ALL_CATS_URL = "https://api.thecatapi.com/v1/breeds"
 const catArr = new FetchCat(ALL_CATS_URL)
                
 catArr.fetchCats(ALL_CATS_URL)
-        .then(data => {
-            cardCatEl.classList.add("is-hidden");
-            const mark = data.map(el => {
+    .then(data => {
+            loaderEl.classList.add("loader");
+                        const mark = data.map(el => {
                 return `<option value=${el.id}>${el.name}</option>`
                 // console.log(`{label: "${el.name}", value="${el.id}"}`);
                 return `{label: "${el.name}", value="${el.id}"}`;
             }).join("")
             // VirtualSelect.init({ ele: 'select', options: [mark], placeholder: 'Select options here'});
             dropDownEl.insertAdjacentHTML("beforeEnd", mark)
-            VirtualSelect.init({ ele: dropDownEl });        
+            VirtualSelect.init({
+                ele: dropDownEl,
+                search: true,
+                silentInitialValueSet: false,
+                placeholder: "Select an option",
+                selectedOption: null
+            });        
           
             const el = document.querySelector('.breed-select')
-            el.addEventListener("change", handleDataCat)
-     }).catch(el => Notiflix.Notify.info('Cogito ergo sum'))
+        el.addEventListener("change", handleDataCat)
+        loaderEl.classList.remove("loader");
+        }).catch(el => {
+            Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!')
+            errorEl.classList.remove("is-hidden");
+            cardCatEl.classList.add("is-hidden")
+        })
 
 
 // new VirtualSelect(dropDownEl);
 // var instancce = NiceSelect.bind(document.querySelector(".breed-select")).update()
 const ONE_CAT_BASE_URL = `https://api.thecatapi.com/v1/images/search?breed_ids=`
 
-dropDownEl.addEventListener('change', function() {
-  console.log("this value:", this.value);
-});
+// dropDownEl.addEventListener('change', function() {
+//   console.log("this value:", this.value);
+// });
 
 
-document.querySelector('.breed-select').addEventListener("change", handleDataCat)
+// document.querySelector('.breed-select').addEventListener("change", handleDataCat)
 function handleDataCat(event) {
-    console.log(this.value);
-    console.log(123);
-    console.dir(event.target.value)
-    console.dir(event.currentTarget)
-
+    cardCatEl.classList.remove("is-hidden");
+     errorEl.classList.add("is-hidden");
+    loaderEl.classList.add("loader");
     catArr.fetchCatByBreed(ONE_CAT_BASE_URL + event.target.value).then(el => {
         cardCatEl.classList.remove("is-hidden");
 
@@ -71,13 +84,18 @@ function handleDataCat(event) {
         <p><span style='font-weight: bold'>Temperament: </span>${temperament}</p>
         <a href="${wiki}">${wiki}</a>
 </div>`;        
-        // const mark1 = el.map(el => { //return kittyCatMarkup // })        
-        loaderEl.classList.add("is-hidden");
-        errorEl.classList.add("is-hidden");
+loaderEl.classList.remove("loader");        
+// const mark1 = el.map(el => { //return kittyCatMarkup // })        
+        // loaderEl.classList.add("is-hidden");
+        // errorEl.classList.add("is-hidden");
         cardCatEl.innerHTML = kittyCatMarkup
         // cardCatEl.insertAdjacentHTML("beforeEnd", mark1)
     })
-        .catch(el => Notiflix.Notify.info('Cogito ergo sum'))
+        .catch(el => {
+           Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!')
+            errorEl.classList.remove("is-hidden");
+            cardCatEl.classList.add("is-hidden")
+        })
 }
 
 
