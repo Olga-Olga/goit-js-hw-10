@@ -47,7 +47,7 @@ function handleDataCat(event) {
       <div>
         <h2>${nameCat}</h2>
         <p>${description}</p>
-        <h3>Temperament: ${temperament}</h3>
+        <h3>Temperament:</h3><p>${temperament}</p>
         <a href="${wiki}">${wiki}</a>
 </div>`  
         console.log(mimimi);
@@ -57,13 +57,9 @@ const mark1 = el.map(el => {
 }).join("")
         
         const card = document.querySelector(".cat-info")
-
         console.log(card);
         card.insertAdjacentHTML("beforeEnd", mark1)
-
-        })
-
-    
+        })    
 }
 
 
