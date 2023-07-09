@@ -12,12 +12,13 @@ const loaderEl = document.querySelector(".loader")
 const errorEl = document.querySelector(".error")
 const cardCatEl = document.querySelector(".cat-info");
 
+
 const ALL_CATS_URL = "https://api.thecatapi.com/v1/breeds"
 const catArr = new FetchCat(ALL_CATS_URL)
                
 catArr.fetchCats(ALL_CATS_URL)
-    .then(data => {
-       
+        .then(data => {
+       cardCatEl.classList.add("is-hidden");
         const mark = data.map(el => {
     return `<option value=${el.id}>${el.name}</option>`
         }).join("")
@@ -31,8 +32,9 @@ const ONE_CAT_BASE_URL = `https://api.thecatapi.com/v1/images/search?breed_ids=`
 dropDownEl.addEventListener("change", handleDataCat)
 function handleDataCat(event) {
     console.dir(event.target.value)
-    catArr.fetchCatByBreed(ONE_CAT_BASE_URL + event.target.value).then(el => {   
-
+    catArr.fetchCatByBreed(ONE_CAT_BASE_URL + event.target.value).then(el => {
+        cardCatEl.classList.remove("is-hidden");
+        
         const id = event.target.value
         const nameCat = el[0].breeds[0].name
         const picture = el[0].url
