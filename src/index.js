@@ -21,13 +21,13 @@ const cardCatEl = document.querySelector(".cat-info");
 cardCatEl.classList.add("is-hidden")
 errorEl.classList.add("is-hidden");
 
-const ALL_CATS_URL = "https://api.thecatapi.com/v1/breeds"
-const catArr = new FetchCat(ALL_CATS_URL)
-               
-catArr.fetchCats(ALL_CATS_URL)
+
+const catArr = new FetchCat()               
+catArr.fetchCats()
     .then(data => {
+        cardCatEl.classList.add("is-hidden");      
             loaderEl.classList.add("loader");
-                        const mark = data.map(el => {
+            const mark = data.map(el => {
                 return `<option value=${el.id}>${el.name}</option>`
                 // console.log(`{label: "${el.name}", value="${el.id}"}`);
                 return `{label: "${el.name}", value="${el.id}"}`;
@@ -42,9 +42,10 @@ catArr.fetchCats(ALL_CATS_URL)
                 selectedOption: null
             });        
           
-            const el = document.querySelector('.breed-select')
+        const el = document.querySelector('.breed-select')
         el.addEventListener("change", handleDataCat)
-        loaderEl.classList.remove("loader");
+         loaderEl.classList.remove("loader");
+        cardCatEl.classList.remove("is-hidden");
         }).catch(el => {
             Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!')
             errorEl.classList.remove("is-hidden");
@@ -54,7 +55,6 @@ catArr.fetchCats(ALL_CATS_URL)
 
 // new VirtualSelect(dropDownEl);
 // var instancce = NiceSelect.bind(document.querySelector(".breed-select")).update()
-const ONE_CAT_BASE_URL = `https://api.thecatapi.com/v1/images/search?breed_ids=`
 
 // dropDownEl.addEventListener('change', function() {
 //   console.log("this value:", this.value);
@@ -66,9 +66,7 @@ function handleDataCat(event) {
     cardCatEl.classList.remove("is-hidden");
      errorEl.classList.add("is-hidden");
     loaderEl.classList.add("loader");
-    catArr.fetchCatByBreed(ONE_CAT_BASE_URL + event.target.value).then(el => {
-        cardCatEl.classList.remove("is-hidden");
-
+    catArr.fetchCatByBreed(event.target.value).then(el => {
         const id = event.target.value
         const nameCat = el[0].breeds[0].name
         const picture = el[0].url
@@ -90,6 +88,8 @@ loaderEl.classList.remove("loader");
         // errorEl.classList.add("is-hidden");
         cardCatEl.innerHTML = kittyCatMarkup
         // cardCatEl.insertAdjacentHTML("beforeEnd", mark1)
+        cardCatEl.classList.remove("is-hidden");
+      
     })
         .catch(el => {
            Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!')

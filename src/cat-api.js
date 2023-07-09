@@ -7,9 +7,10 @@ export class FetchCat {
         constructor(url) {
         this.url = url;
     }
-   fetchCats(url) {
+   fetchCats() {
             // const arrCats = []
-            return axios.get(url, {
+           const ALL_CATS_URL = "https://api.thecatapi.com/v1/breeds"
+            return axios.get(ALL_CATS_URL, {
             })
                     .then(res => {
                             return res.data
@@ -23,8 +24,8 @@ export class FetchCat {
 }
 
         fetchCatByBreed(brirdURLId) {
-            // const arrCats = []
-            return axios.get(`${brirdURLId}`, {
+            const ONE_CAT_BASE_URL = `https://api.thecatapi.com/v1/images/search?breed_ids=`
+            return axios.get(ONE_CAT_BASE_URL + brirdURLId, {
             })
                     .then(res => {
                             return res.data
