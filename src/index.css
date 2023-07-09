@@ -1,0 +1,12 @@
+.is-hidden {
+  display: none;
+}
+
+body {
+  background-color: #def3f3;
+}
+
+.cat-info {
+  padding: 40px;
+  text-align: justify;
+}

@@ -3,7 +3,7 @@ axios.defaults.headers.common["x-api-key"] = "live_A0QBC77czTXXzSvyN9Zimoxe9Amub
 // console.log(axios.isCancel('something'));
 
 
-export default class FetchCat {
+export class FetchCat {
         constructor(url) {
         this.url = url;
     }
@@ -22,9 +22,9 @@ export default class FetchCat {
         // return arrCats
 }
 
-        fetchCatByBreed(brirdId) {
+        fetchCatByBreed(brirdURLId) {
             // const arrCats = []
-            return axios.get(`https://api.thecatapi.com/v1/images/search?breed_ids=${brirdId}`, {
+            return axios.get(`${brirdURLId}`, {
             })
                     .then(res => {
                             return res.data
