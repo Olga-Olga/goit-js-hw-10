@@ -1,39 +1,30 @@
 
 import { FetchCat } from "./cat-api";
+import hbs from './templates/markupCat.hbs'
+// import VirtualSelectPlugin from 'virtual-select-plugin';
+import 'virtual-select-plugin/dist/virtual-select.min.css';
+import 'virtual-select-plugin/dist/virtual-select.min.js';
 // import SlimSelect from 'slim-select'
 // import NiceSelect from "nice-select2";
-// import VirtualSelect from 'virtual-select-plugin';
-// const Handlebars = require("handlebars");
-// const template = Handlebars.compile(`{{#each this}}
-// <option value={{${el.id}}}>{{${el.name}}}</option>
-// {{/each}}`);
-// console.log(template());
-// import markup from './templates/markupCat.hbs';
+// const Handlаebars = require("handlebars");
+
 import Notiflix from 'notiflix';
-Notiflix.Notify.success('Loading data, please wait...');
-
-
 const dropDownEl = document.querySelector(".breed-select")
-
-const loaderEl = document.querySelector(".willbeloading")
-const errorEl = document.querySelector(".error")
+const loaderEl = document.querySelector(".loader")
 const cardCatEl = document.querySelector(".cat-info");
-cardCatEl.classList.add("is-hidden")
-errorEl.classList.add("is-hidden");
+cardCatEl.style.display = "none";
+loaderEl.style.display = "block";
 
+loadingElement = document.querySelector(".content")
+loaderEl.style.display = "none";
 
 const catArr = new FetchCat()               
 catArr.fetchCats()
     .then(data => {
+        loadingElement.style.display = "block";
         cardCatEl.classList.add("is-hidden");      
-            loaderEl.classList.add("loader");
-            const mark = data.map(el => {
-                return `<option value=${el.id}>${el.name}</option>`
-                // console.log(`{label: "${el.name}", value="${el.id}"}`);
-                return `{label: "${el.name}", value="${el.id}"}`;
-            }).join("")
-            // VirtualSelect.init({ ele: 'select', options: [mark], placeholder: 'Select options here'});
-            dropDownEl.insertAdjacentHTML("beforeEnd", mark)
+        console.log(hbs(data));
+            dropDownEl.insertAdjacentHTML("beforeEnd", hbs(data))
             VirtualSelect.init({
                 ele: dropDownEl,
                 search: true,
@@ -44,57 +35,46 @@ catArr.fetchCats()
           
         const el = document.querySelector('.breed-select')
         el.addEventListener("change", handleDataCat)
-         loaderEl.classList.remove("loader");
-        cardCatEl.classList.remove("is-hidden");
-        }).catch(el => {
-            Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!')
-            errorEl.classList.remove("is-hidden");
-            cardCatEl.classList.add("is-hidden")
+        loadingElement.style.display = "none";
+    })
+    .catch(el => {
+        Notiflix.Notify.failure(el.code)
+        Notiflix.Notify.failure(el.stack)
         })
 
 
-// new VirtualSelect(dropDownEl);
-// var instancce = NiceSelect.bind(document.querySelector(".breed-select")).update()
-
-// dropDownEl.addEventListener('change', function() {
-//   console.log("this value:", this.value);
-// });
-
-
-// document.querySelector('.breed-select').addEventListener("change", handleDataCat)
 function handleDataCat(event) {
-    cardCatEl.classList.remove("is-hidden");
-     errorEl.classList.add("is-hidden");
-    loaderEl.classList.add("loader");
-    catArr.fetchCatByBreed(event.target.value).then(el => {
-        const id = event.target.value
+    catArr.fetchCatByBreed(event.target.value)
+        .then(el => {
+            loadingElement.style.display = "block";
+            cardCatEl.style.display = "none";
+            const id = event.target.value
+            if (id === "") {
+                // debugger;
+                cardCatEl.innerHTML = "<H1>Выбери кота</H1>"
+                cardCatEl.style.display = "block";
+                return
+            }            
         const nameCat = el[0].breeds[0].name
         const picture = el[0].url
         const description = el[0].breeds[0].description
         const wiki = el[0].breeds[0].wikipedia_url
         const temperament = el[0].breeds[0].temperament
-
-        const kittyCatMarkup =
+       const kittyCatMarkup =
             `<img src="${picture}" alt="${id}" width="400px" height="300px">
       <div>
         <h2>${nameCat}</h2>
         <p>${description}</p>
         <p><span style='font-weight: bold'>Temperament: </span>${temperament}</p>
         <a href="${wiki}">${wiki}</a>
-</div>`;        
-loaderEl.classList.remove("loader");        
-// const mark1 = el.map(el => { //return kittyCatMarkup // })        
-        // loaderEl.classList.add("is-hidden");
-        // errorEl.classList.add("is-hidden");
-        cardCatEl.innerHTML = kittyCatMarkup
-        // cardCatEl.insertAdjacentHTML("beforeEnd", mark1)
-        cardCatEl.classList.remove("is-hidden");
-      
-    })
+</div>`;       
+            cardCatEl.innerHTML = kittyCatMarkup
+            cardCatEl.style.display = "block";
+        loadingElement.style.display = "none";
+        })
         .catch(el => {
-           Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!')
-            errorEl.classList.remove("is-hidden");
-            cardCatEl.classList.add("is-hidden")
+         Notiflix.Notify.failure(el.code)
+          Notiflix.Notify.failure(el.stack)
         })
 }
 
