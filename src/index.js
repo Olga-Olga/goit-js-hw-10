@@ -8,7 +8,7 @@ import 'virtual-select-plugin/dist/virtual-select.min.js';
 import Notiflix from 'notiflix';
 const dropDownEl = document.querySelector(".breed-select")
 const spiner = document.querySelector(".loader")
-loadingElement = document.querySelector(".content")
+const loadingElement = document.querySelector(".content")
 const cardCatEl = document.querySelector(".cat-info");
 cardCatEl.style.display = "none";
 spiner.style.display = "none";
