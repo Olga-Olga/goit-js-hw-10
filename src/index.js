@@ -10,12 +10,15 @@ const dropDownEl = document.querySelector(".breed-select")
 const spiner = document.querySelector(".loader")
 const loadingElement = document.querySelector(".content")
 const cardCatEl = document.querySelector(".cat-info");
+const bouncerEl = document.querySelector(".bouncer")
+bouncerEl.style.display = "none";
 cardCatEl.style.display = "none";
 spiner.style.display = "none";
 
 const catArr = new FetchCat()               
 catArr.fetchCats()
     .then(data => {
+        bouncerEl.style.display = "block";
         spiner.style.display = "block";
         loadingElement.style.display = "block";
         cardCatEl.classList.add("is-hidden");      
@@ -23,8 +26,6 @@ catArr.fetchCats()
             VirtualSelect.init({
                 ele: dropDownEl,
                 search: true,
-                // silentInitialValueSet: false,
-                // placeholder: "Select an option",
                 showSelectedOptionsFirst: true,
                 keepValue: false
             });        
@@ -33,6 +34,7 @@ catArr.fetchCats()
         el.addEventListener("change", handleDataCat)
         loadingElement.style.display = "none";
         spiner.style.display = "none";
+        bouncerEl.style.display = "none";
     })
     .catch(el => {
         Notiflix.Notify.failure(el.code)
@@ -42,7 +44,7 @@ catArr.fetchCats()
 
 function handleDataCat(event) {
     catArr.fetchCatByBreed(event.target.value)
-        .then(el => {
+        .then((el) => {
             spiner.style.display = "block";
             loadingElement.style.display = "block";
             cardCatEl.style.display = "none";
@@ -53,12 +55,16 @@ function handleDataCat(event) {
                 loadingElement.style.display = "none";
                 cardCatEl.style.display = "block";
                 return
-            }            
-        const nameCat = el[0].breeds[0].name
-        const picture = el[0].url
-        const description = el[0].breeds[0].description
-        const wiki = el[0].breeds[0].wikipedia_url
-        const temperament = el[0].breeds[0].temperament
+            }  
+            
+            const { name: nameCat, description, wikipedia_url: wiki, temperament } = el[0].breeds[0];
+            const picture = el[0].url;
+            
+        // const nameCat = el[0].breeds[0].name
+        // const picture = el[0].url
+        // const description = el[0].breeds[0].description
+        // const wiki = el[0].breeds[0].wikipedia_url
+        // const temperament = el[0].breeds[0].temperament
        const kittyCatMarkup =
             `<img src="${picture}" alt="${id}" width="400px" height="300px">
       <div>
