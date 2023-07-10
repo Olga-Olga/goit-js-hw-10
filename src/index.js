@@ -14,6 +14,7 @@ const bouncerEl = document.querySelector(".bouncer")
 bouncerEl.style.display = "none";
 cardCatEl.style.display = "none";
 spiner.style.display = "none";
+let mi;
 
 const catArr = new FetchCat()               
 catArr.fetchCats()
@@ -23,12 +24,17 @@ catArr.fetchCats()
         loadingElement.style.display = "block";
         cardCatEl.classList.add("is-hidden");      
             dropDownEl.insertAdjacentHTML("beforeEnd", hbs(data))
-            VirtualSelect.init({
+        VirtualSelect.init({
+                autoSelectFirstOption: false,
                 ele: dropDownEl,
                 search: true,
-                showSelectedOptionsFirst: true,
-                keepValue: false
-            });        
+                showSelectedOptionsFirst: false,
+                keepValue: false,
+                
+            })
+                //  .onOpen();  
+        
+       
           
         const el = document.querySelector('.breed-select')
         el.addEventListener("change", handleDataCat)
@@ -77,6 +83,10 @@ function handleDataCat(event) {
             cardCatEl.style.display = "block";
             loadingElement.style.display = "none";
             spiner.style.display = "none";
+            // console.log(mi);
+            // console.log(mi.typeof());
+            Notiflix.Notify.success("Котик завантажився мі-мі-мі")
+
         })
         .catch(el => {
          Notiflix.Notify.failure(el.code)
