@@ -10,17 +10,16 @@ import 'virtual-select-plugin/dist/virtual-select.min.js';
 
 import Notiflix from 'notiflix';
 const dropDownEl = document.querySelector(".breed-select")
-const loaderEl = document.querySelector(".loader")
+const spiner = document.querySelector(".loader")
+loadingElement = document.querySelector(".content")
 const cardCatEl = document.querySelector(".cat-info");
 cardCatEl.style.display = "none";
-loaderEl.style.display = "block";
-
-loadingElement = document.querySelector(".content")
-loaderEl.style.display = "none";
+spiner.style.display = "none";
 
 const catArr = new FetchCat()               
 catArr.fetchCats()
     .then(data => {
+        spiner.style.display = "block";
         loadingElement.style.display = "block";
         cardCatEl.classList.add("is-hidden");      
         console.log(hbs(data));
@@ -36,6 +35,7 @@ catArr.fetchCats()
         const el = document.querySelector('.breed-select')
         el.addEventListener("change", handleDataCat)
         loadingElement.style.display = "none";
+         spiner.style.display = "none";
     })
     .catch(el => {
         Notiflix.Notify.failure(el.code)
@@ -46,13 +46,12 @@ catArr.fetchCats()
 function handleDataCat(event) {
     catArr.fetchCatByBreed(event.target.value)
         .then(el => {
+            spiner.style.display = "block";
             loadingElement.style.display = "block";
             cardCatEl.style.display = "none";
             const id = event.target.value
             if (id === "") {
-                // debugger;
                 cardCatEl.innerHTML = "<H1>Выбери кота</H1>"
-                cardCatEl.style.display = "block";
                 return
             }            
         const nameCat = el[0].breeds[0].name
@@ -70,7 +69,8 @@ function handleDataCat(event) {
 </div>`;       
             cardCatEl.innerHTML = kittyCatMarkup
             cardCatEl.style.display = "block";
-        loadingElement.style.display = "none";
+            loadingElement.style.display = "none";
+            spiner.style.display = "none";
         })
         .catch(el => {
          Notiflix.Notify.failure(el.code)
