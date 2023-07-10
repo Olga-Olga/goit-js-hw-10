@@ -21,7 +21,7 @@
 }
 
 .content {
-  width: 150vmin;
+  width: 111vmin;
   height: 0vmin;
   transform: rotateY(55deg) scale3d(0.5, 1.5, 0.5);
 }

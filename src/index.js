@@ -4,9 +4,6 @@ import hbs from './templates/markupCat.hbs'
 // import VirtualSelectPlugin from 'virtual-select-plugin';
 import 'virtual-select-plugin/dist/virtual-select.min.css';
 import 'virtual-select-plugin/dist/virtual-select.min.js';
-// import SlimSelect from 'slim-select'
-// import NiceSelect from "nice-select2";
-// const Handlаebars = require("handlebars");
 
 import Notiflix from 'notiflix';
 const dropDownEl = document.querySelector(".breed-select")
@@ -22,20 +19,20 @@ catArr.fetchCats()
         spiner.style.display = "block";
         loadingElement.style.display = "block";
         cardCatEl.classList.add("is-hidden");      
-        console.log(hbs(data));
             dropDownEl.insertAdjacentHTML("beforeEnd", hbs(data))
             VirtualSelect.init({
                 ele: dropDownEl,
                 search: true,
-                silentInitialValueSet: false,
-                placeholder: "Select an option",
-                selectedOption: null
+                // silentInitialValueSet: false,
+                // placeholder: "Select an option",
+                showSelectedOptionsFirst: true,
+                keepValue: false
             });        
           
         const el = document.querySelector('.breed-select')
         el.addEventListener("change", handleDataCat)
         loadingElement.style.display = "none";
-         spiner.style.display = "none";
+        spiner.style.display = "none";
     })
     .catch(el => {
         Notiflix.Notify.failure(el.code)
@@ -51,7 +48,10 @@ function handleDataCat(event) {
             cardCatEl.style.display = "none";
             const id = event.target.value
             if (id === "") {
-                cardCatEl.innerHTML = "<H1>Выбери кота</H1>"
+                cardCatEl.innerHTML = "<H1>Choose the Cat</H1>"
+                spiner.style.display = "none";
+                loadingElement.style.display = "none";
+                cardCatEl.style.display = "block";
                 return
             }            
         const nameCat = el[0].breeds[0].name
@@ -66,7 +66,7 @@ function handleDataCat(event) {
         <p>${description}</p>
         <p><span style='font-weight: bold'>Temperament: </span>${temperament}</p>
         <a href="${wiki}">${wiki}</a>
-</div>`;       
+</div>`;
             cardCatEl.innerHTML = kittyCatMarkup
             cardCatEl.style.display = "block";
             loadingElement.style.display = "none";
