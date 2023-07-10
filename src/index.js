@@ -1,7 +1,7 @@
 
 import { FetchCat } from "./cat-api";
 import hbs from './templates/markupCat.hbs'
-// import VirtualSelectPlugin from 'virtual-select-plugin';
+// import VirtualSelectPlugin from 'virtual-select-plugin'
 import 'virtual-select-plugin/dist/virtual-select.min.css';
 import 'virtual-select-plugin/dist/virtual-select.min.js';
 
