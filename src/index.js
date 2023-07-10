@@ -28,7 +28,7 @@ catArr.fetchCats()
                 autoSelectFirstOption: false,
                 ele: dropDownEl,
                 search: true,
-                showSelectedOptionsFirst: false,
+                showselectedOptionsFirst: false,
                 keepValue: false,
                 
             })
