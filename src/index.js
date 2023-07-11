@@ -22,7 +22,7 @@ const catArr = new FetchCat()
 Loading.standard();             
 catArr.fetchCats()
     .then(data => {
-        
+        Loading.standard();
         bouncerEl.style.display = "block";
         spiner.style.display = "block";
         loadingElement.style.display = "block";
@@ -41,6 +41,7 @@ catArr.fetchCats()
         loadingElement.style.display = "none";
         spiner.style.display = "none";
         bouncerEl.style.display = "none";
+        Loading.remove();
     })
     .catch(el => {
         Notiflix.Notify.failure(el.code)
@@ -60,6 +61,7 @@ function handleDataCat(event) {
                 spiner.style.display = "none";
                 loadingElement.style.display = "none";
                 cardCatEl.style.display = "block";
+                Loading.remove();
                 return
             }  
             const { name: nameCat, description, wikipedia_url: wiki, temperament } = el[0].breeds[0];
