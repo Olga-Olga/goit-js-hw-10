@@ -4,6 +4,8 @@ import hbs from './templates/markupCat.hbs'
 // import VirtualSelectPlugin from 'virtual-select-plugin'
 import 'virtual-select-plugin/dist/virtual-select.min.css';
 import 'virtual-select-plugin/dist/virtual-select.min.js';
+import { Report } from 'notiflix/build/notiflix-report-aio';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
 import Notiflix from 'notiflix';
 const dropDownEl = document.querySelector(".breed-select")
@@ -16,14 +18,16 @@ cardCatEl.style.display = "none";
 spiner.style.display = "none";
 let mi;
 
-const catArr = new FetchCat()               
+const catArr = new FetchCat()  
+Loading.standard();             
 catArr.fetchCats()
     .then(data => {
+        
         bouncerEl.style.display = "block";
         spiner.style.display = "block";
         loadingElement.style.display = "block";
         cardCatEl.classList.add("is-hidden");      
-            dropDownEl.insertAdjacentHTML("beforeEnd", hbs(data))
+        dropDownEl.insertAdjacentHTML("beforeEnd", hbs(data))
         VirtualSelect.init({
                 autoSelectFirstOption: false,
                 ele: dropDownEl,
@@ -32,10 +36,6 @@ catArr.fetchCats()
                 keepValue: false,
                 
             })
-                //  .onOpen();  
-        
-       
-          
         const el = document.querySelector('.breed-select')
         el.addEventListener("change", handleDataCat)
         loadingElement.style.display = "none";
@@ -45,13 +45,13 @@ catArr.fetchCats()
     .catch(el => {
         Notiflix.Notify.failure(el.code)
         Notiflix.Notify.failure(el.stack)
-        })
-
+    })
 
 function handleDataCat(event) {
     catArr.fetchCatByBreed(event.target.value)
         .then((el) => {
-            spiner.style.display = "block";
+            Loading.standard();
+            bouncerEl.style.display = "block", 2000;
             loadingElement.style.display = "block";
             cardCatEl.style.display = "none";
             const id = event.target.value
@@ -62,36 +62,23 @@ function handleDataCat(event) {
                 cardCatEl.style.display = "block";
                 return
             }  
-            
             const { name: nameCat, description, wikipedia_url: wiki, temperament } = el[0].breeds[0];
             const picture = el[0].url;
-            
-        // const nameCat = el[0].breeds[0].name
-        // const picture = el[0].url
-        // const description = el[0].breeds[0].description
-        // const wiki = el[0].breeds[0].wikipedia_url
-        // const temperament = el[0].breeds[0].temperament
-       const kittyCatMarkup =
-            `<img src="${picture}" alt="${id}" width="400px" height="300px">
-      <div>
-        <h2>${nameCat}</h2>
-        <p>${description}</p>
-        <p><span style='font-weight: bold'>Temperament: </span>${temperament}</p>
-        <a href="${wiki}">${wiki}</a>
-</div>`;
+            const kittyCatMarkup = `<img src="${picture}" alt="${id}" width="400px" height="280px"><div><h2>${nameCat}</h2><p>${description}</p><p><span style='font-weight: bold'>Temperament: </span>${temperament}</p><a href="${wiki}">${wiki}</a></div>`;
             cardCatEl.innerHTML = kittyCatMarkup
             cardCatEl.style.display = "block";
-            loadingElement.style.display = "none";
-            spiner.style.display = "none";
-            // console.log(mi);
-            // console.log(mi.typeof());
             Notiflix.Notify.success("Котик завантажився мі-мі-мі")
-
+            Loading.remove();
         })
         .catch(el => {
          Notiflix.Notify.failure(el.code)
           Notiflix.Notify.failure(el.stack)
         })
+        .finally(el => {
+            loadingElement.style.display = "none";
+            bouncerEl.style.display = "none";
+        }
+        )
 }
 
 
